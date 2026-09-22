@@ -9,8 +9,8 @@ RUN npm install
 
 COPY . .
 
-RUN npx prisma generate && npm run build
+RUN npx prisma generate --schema=backend/prisma/schema.prisma && npm run build
 
 EXPOSE 4000
 
-CMD ["sh", "-c", "npx prisma db push && npm start"]
+CMD ["sh", "-c", "npx prisma db push --schema=backend/prisma/schema.prisma && npm start"]
