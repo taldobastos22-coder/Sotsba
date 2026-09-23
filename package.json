@@ -1,13 +1,13 @@
 {
-  "name": "sotsba-backend",
-  "version": "2.0.0",
+  "name": "sotsba",
+  "version": "2.1.0",
   "private": true,
   "scripts": {
-    "dev": "tsx watch backend/src/server.ts",
+    "dev": "tsx watch src/server.ts",
     "build": "tsc",
     "start": "node dist/server.js",
-    "prisma:generate": "prisma generate --schema=backend/prisma/schema.prisma",
-    "prisma:migrate": "prisma migrate deploy --schema=backend/prisma/schema.prisma"
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate deploy"
   },
   "dependencies": {
     "@prisma/client": "6.19.0",
@@ -19,7 +19,8 @@
     "helmet": "latest",
     "jsonwebtoken": "latest",
     "zod": "latest",
-    "openai": "latest"
+    "openai": "latest",
+    "stripe": "latest"
   },
   "devDependencies": {
     "@types/cors": "latest",
