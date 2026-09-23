@@ -1,37 +1,48 @@
-generator client { provider = "prisma-client-js" }
-datasource db { provider = "postgresql" url = env("DATABASE_URL") }
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
 
 model User {
-  id           String   @id @default(cuid())
-  name         String
-  email        String   @unique
-  passwordHash String
-  credits      Int      @default(20)
-  plan         String   @default("free")
-  stripeCustomerId String? @unique
-  stripeSubscriptionId String? @unique
-  subscriptionStatus String?
-  currentPeriodEnd DateTime?
-  createdAt    DateTime @default(now())
-  company      Company?
-  generations  Generation[]
+  id                    String       @id @default(cuid())
+  name                  String
+  email                 String       @unique
+  passwordHash          String
+  credits               Int          @default(20)
+  plan                  String       @default("free")
+  stripeCustomerId      String?      @unique
+  stripeSubscriptionId  String?      @unique
+  subscriptionStatus    String?
+  currentPeriodEnd      DateTime?
+  createdAt             DateTime     @default(now())
+
+  company               Company?
+  generations           Generation[]
 }
+
 model Company {
-  id        String @id @default(cuid())
-  userId    String @unique
-  name      String
-  segment   String?
-  website   String?
-  brandColor String?
-  logoUrl   String?
-  user      User @relation(fields:[userId], references:[id], onDelete: Cascade)
+  id          String   @id @default(cuid())
+  userId      String   @unique
+  name        String
+  segment     String?
+  website     String?
+  brandColor  String?
+  logoUrl     String?
+
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
+
 model Generation {
-  id        String   @id @default(cuid())
-  userId    String
-  type      String
-  prompt    String
-  result    String
-  createdAt DateTime @default(now())
-  user      User @relation(fields:[userId], references:[id], onDelete: Cascade)
-}
+  id          String   @id @default(cuid())
+  userId      String
+  type        String
+  prompt      String
+  result      String
+  createdAt   DateTime @default(now())
+
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}}
