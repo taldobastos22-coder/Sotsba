@@ -1,0 +1,25 @@
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: sotsba
+      POSTGRES_PASSWORD: sotsba
+      POSTGRES_DB: sotsba
+    ports:
+      - "5432:5432"
+    volumes:
+      - sotsba_db:/var/lib/postgresql/data
+
+  api:
+    build: .
+    ports:
+      - "4000:4000"
+    environment:
+      DATABASE_URL: postgresql://sotsba:sotsba@db:5432/sotsba
+      JWT_SECRET: change-me
+      CORS_ORIGIN: http://localhost:8888
+    depends_on:
+      - db
+
+volumes:
+  sotsba_db:

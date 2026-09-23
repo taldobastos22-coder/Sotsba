@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SOTSBA — Content Intelligence</title>
+<meta name="description" content="SOTSBA — inteligência artificial para conteúdo, campanhas e design.">
+<style>
+:root{--bg:#080910;--p:#11131d;--p2:#171a27;--line:#292d3d;--txt:#f7f7fb;--muted:#969caf;--a:#7c5cff;--a2:#a98cff;--danger:#ef4444;--ok:#34d399}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 20% 0,#21154a 0,#080910 42%);color:var(--txt);font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif}button,input,textarea,select{font:inherit}button{cursor:pointer}.hidden{display:none!important}
+.layout{min-height:100vh;display:flex}.side{width:240px;position:fixed;left:0;top:0;bottom:0;background:#0b0c12;border-right:1px solid var(--line);padding:22px 14px}.logo{font-size:25px;font-weight:900;letter-spacing:.08em;margin:5px 12px 28px}.logo span{color:var(--a2)}.nav button{width:100%;border:0;background:transparent;color:#aeb3c5;text-align:left;padding:12px;border-radius:11px;margin:3px 0}.nav button.active,.nav button:hover{background:#1b1730;color:#fff}
+.main{margin-left:240px;width:calc(100% - 240px);padding:28px;max-width:1500px}.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px}.top h1{margin:0;font-size:28px}.status{font-size:12px;padding:7px 10px;border:1px solid var(--line);border-radius:99px;color:#cfd3e2}.card{background:linear-gradient(180deg,#141722,#10121a);border:1px solid var(--line);border-radius:17px;padding:20px}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.hero{display:grid;grid-template-columns:1.2fr .8fr;gap:14px}.hero .card:first-child{background:linear-gradient(135deg,#24164e,#11131c)}h2{margin:0 0 12px}.muted{color:var(--muted)}.metric{font-size:30px;font-weight:850;margin:8px 0}.btn{border:0;border-radius:10px;padding:11px 15px;background:var(--a);color:white;font-weight:750}.btn.alt{background:#252a3c}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}.section{margin-top:15px}.studio{display:grid;grid-template-columns:1fr 1fr;gap:14px}.field{margin:12px 0}.field label{display:block;font-size:13px;color:#b8bdcd;margin-bottom:6px}.field input,.field textarea,.field select{width:100%;background:#0b0d14;border:1px solid #2d3244;border-radius:10px;color:#fff;padding:11px}.field textarea{min-height:115px;resize:vertical}.preview{min-height:420px;display:flex;align-items:center;justify-content:center;text-align:center;border:1px dashed #4a5064;border-radius:17px;background:linear-gradient(145deg,#20173b,#0e1119);padding:25px}.row{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:14px;border:1px solid var(--line);border-radius:12px;margin:8px 0}.pill{padding:5px 9px;background:#252a3c;border-radius:99px;font-size:12px}.auth{min-height:100vh;display:grid;place-items:center;padding:20px}.authbox{width:min(430px,100%);background:#11131d;border:1px solid var(--line);border-radius:20px;padding:28px}.toast{position:fixed;right:18px;bottom:18px;background:#181b28;border:1px solid #353a4d;padding:13px 16px;border-radius:12px;display:none;max-width:360px}.modal{position:fixed;inset:0;background:#0009;display:grid;place-items:center;padding:20px}.modal .card{width:min(480px,100%)}
+@media(max-width:900px){.side{width:70px}.logo{font-size:0}.logo span{font-size:22px}.nav button{font-size:0;text-align:center}.nav button:first-letter{font-size:20px}.main{margin-left:70px;width:calc(100% - 70px);padding:18px}.grid{grid-template-columns:repeat(2,1fr)}.hero,.studio{grid-template-columns:1fr}}
+@media(max-width:560px){.grid{grid-template-columns:1fr}.top{align-items:flex-start;flex-direction:column;gap:8px}.main{padding:13px}}
+</style>
+</head>
+<body>
+<div id="auth" class="auth">
+  <div class="authbox">
+    <div class="logo">SOTS<span>BA</span></div>
+    <h2 id="authTitle">Entrar na SOTSBA</h2>
+    <p class="muted" id="authSub">Acesse seu painel de conteúdo.</p>
+    <div id="nameField" class="field hidden"><label>Nome</label><input id="name" placeholder="Seu nome"></div>
+    <div class="field"><label>E-mail</label><input id="email" type="email" placeholder="voce@empresa.com"></div>
+    <div class="field"><label>Senha</label><input id="password" type="password" placeholder="mínimo de 8 caracteres"></div>
+    <button class="btn" style="width:100%" onclick="submitAuth()" id="authBtn">Entrar</button>
+    <p style="text-align:center;margin:15px 0 0"><button class="btn alt" onclick="toggleAuth()" id="toggleBtn">Criar conta</button></p>
+    <p class="muted" style="font-size:12px;margin-top:16px">API: <span id="apiLabel"></span></p>
+  </div>
+</div>
+
+<div id="app" class="layout hidden">
+<aside class="side">
+ <div class="logo">SOTS<span>BA</span></div>
+ <nav class="nav">
+  <button data-page="dashboard" class="active">⌂ &nbsp; Dashboard</button>
+  <button data-page="content">✦ &nbsp; AI Studio</button>
+  <button data-page="design">◈ &nbsp; AI Design Studio</button>
+  <button data-page="calendar">▦ &nbsp; Calendário</button>
+  <button data-page="campaigns">◈ &nbsp; Campanhas</button>
+  <button data-page="seo">⌁ &nbsp; SEO Studio</button>
+  <button data-page="analytics">↗ &nbsp; Analytics</button>
+  <button data-page="plans">◇ &nbsp; Planos</button>
+ </nav>
+ <div style="position:absolute;bottom:20px;left:14px;right:14px"><button class="nav button" style="color:#ef8b8b;border:0;background:transparent;padding:12px;width:100%;text-align:left" onclick="logout()">↪ Sair</button></div>
+</aside>
+<main class="main">
+ <div class="top"><h1 id="title">Dashboard</h1><div class="status" id="status">● Conectando...</div></div>
+
+ <section id="dashboard" class="page">
+  <div class="hero">
+   <div class="card"><h2>Crie conteúdo que trabalha pela sua empresa.</h2><p class="muted">Gere campanhas, textos, artes e ideias de SEO em um único espaço.</p><div class="actions"><button class="btn" onclick="go('design')">Criar uma arte ✨</button><button class="btn alt" onclick="go('content')">Gerar conteúdo</button></div></div>
+   <div class="card"><div class="muted">Créditos disponíveis</div><div class="metric" id="credits">—</div><p class="muted">gerações restantes</p></div>
+  </div>
+  <div class="section grid"><div class="card"><div class="muted">Conteúdos criados</div><div class="metric" id="contentCount">—</div></div><div class="card"><div class="muted">Artes geradas</div><div class="metric" id="designCount">—</div></div><div class="card"><div class="muted">Campanhas</div><div class="metric">0</div></div><div class="card"><div class="muted">Plano</div><div class="metric" id="plan">Free</div></div></div>
+ </section>
+
+ <section id="content" class="page hidden"><div class="studio"><div class="card"><h2>✦ AI Studio</h2><div class="field"><label>Tipo</label><select id="contentType"><option>Post para Instagram</option><option>Legenda</option><option>Anúncio</option><option>Campanha</option></select></div><div class="field"><label>Tom</label><select id="tone"><option>Profissional e persuasivo</option><option>Informal e próximo</option><option>Premium</option><option>Educativo</option></select></div><div class="field"><label>Briefing</label><textarea id="contentBrief" placeholder="Ex.: divulgar lavagem detalhada por R$ 99..."></textarea></div><button class="btn" onclick="generateContent()">Gerar com IA ✨</button></div><div class="preview" id="contentResult"><div><strong>Seu conteúdo aparecerá aqui</strong><p class="muted">Faça login e configure a API para gerar conteúdo real.</p></div></div></div></section>
+
+ <section id="design" class="page hidden"><div class="studio"><div class="card"><h2>◈ AI Design Studio</h2><div class="field"><label>Formato</label><select id="format"><option>1080x1080</option><option>1080x1920</option><option>1080x1350</option></select></div><div class="field"><label>Estilo</label><select id="style"><option>Premium</option><option>Moderno</option><option>Minimalista</option><option>Luxo</option><option>Vibrante</option></select></div><div class="field"><label>Briefing da arte</label><textarea id="designBrief" placeholder="Ex.: promoção de lavagem automotiva por R$ 99, carro preto brilhante..."></textarea></div><button class="btn" onclick="generateDesign()">Gerar arte com IA ✨</button></div><div class="preview" id="designResult"><div><strong>Prévia da arte</strong><p class="muted">A imagem gerada será exibida aqui.</p></div></div></div></section>
+
+ <section id="calendar" class="page hidden"><div class="card"><h2>▦ Calendário</h2><p class="muted">Estrutura pronta para agendamento.</p><div class="row">Segunda — Post institucional <span class="pill">Planejado</span></div><div class="row">Quarta — Oferta <span class="pill">Planejado</span></div></div></section>
+ <section id="campaigns" class="page hidden"><div class="card"><h2>◈ Campanhas</h2><p class="muted">Crie campanhas e agrupe seus conteúdos.</p><div class="row">Nenhuma campanha criada ainda <span class="pill">0</span></div></div></section>
+ <section id="seo" class="page hidden"><div class="studio"><div class="card"><h2>⌁ SEO Studio</h2><div class="field"><label>Palavra-chave</label><input id="seoKey" placeholder="ex.: lavagem automotiva"></div><div class="field"><label>Objetivo</label><textarea id="seoBrief" placeholder="Descreva a página ou serviço..."></textarea></div><button class="btn" onclick="generateSEO()">Otimizar com IA</button></div><div class="preview" id="seoResult"><div><strong>SEO Studio</strong><p class="muted">Estrutura pronta para conectar à geração de SEO.</p></div></div></div></section>
+ <section id="analytics" class="page hidden"><div class="grid"><div class="card"><div class="muted">Gerações</div><div class="metric" id="genCount">—</div></div><div class="card"><div class="muted">Créditos</div><div class="metric" id="anCredits">—</div></div></div></section>
+ <section id="plans" class="page hidden"><div class="grid"><div class="card"><h2>Free</h2><div class="metric">R$ 0</div><p class="muted">20 créditos iniciais</p><button class="btn alt">Plano atual</button></div><div class="card"><h2>Basic</h2><div class="metric">R$ 29,90</div><p class="muted">Mais créditos</p><button class="btn" onclick="subscribe('basic')">Assinar</button></div><div class="card"><h2>Professional</h2><div class="metric">R$ 59,90</div><p class="muted">Recursos avançados</p><button class="btn" onclick="subscribe('professional')">Assinar</button></div><div class="card"><h2>Agency</h2><div class="metric">R$ 149,90</div><p class="muted">Para equipes</p><button class="btn" onclick="subscribe('agency')">Assinar</button></div></div><div class="card" style="grid-column:1/-1"><h2>Gerenciar assinatura</h2><p class="muted">Altere seu plano, método de pagamento ou cancele sua assinatura pelo portal seguro.</p><button class="btn alt" onclick="openPortal()">Gerenciar cobrança</button></div></div></section>
+</main>
+</div>
+<div id="toast" class="toast"></div>
+<script>
+const API=(localStorage.getItem('SOTSBA_API_URL')||'https://sotsba-backend.onrender.com').replace(/\/$/,'');
+document.getElementById('apiLabel').textContent=API;
+let signup=false, token=localStorage.getItem('SOTSBA_TOKEN');
+const titles={dashboard:'Dashboard',content:'AI Studio',design:'AI Design Studio',calendar:'Calendário',campaigns:'Campanhas',seo:'SEO Studio',analytics:'Analytics',plans:'Planos'};
+function showToast(m){let t=document.getElementById('toast');t.textContent=m;t.style.display='block';setTimeout(()=>t.style.display='none',3000)}
+function toggleAuth(){signup=!signup;document.getElementById('nameField').classList.toggle('hidden',!signup);document.getElementById('authTitle').textContent=signup?'Criar conta na SOTSBA':'Entrar na SOTSBA';document.getElementById('authSub').textContent=signup?'Comece com seus créditos gratuitos.':'Acesse seu painel de conteúdo.';document.getElementById('authBtn').textContent=signup?'Criar conta':'Entrar';document.getElementById('toggleBtn').textContent=signup?'Já tenho uma conta':'Criar conta'}
+async function api(path,opts={}){const headers={'Content-Type':'application/json',...(opts.headers||{})};if(token)headers.Authorization='Bearer '+token;const r=await fetch(API+path,{...opts,headers});let d={};try{d=await r.json()}catch{}if(!r.ok)throw new Error(d.error||'Erro na API');return d}
+async function submitAuth(){try{const email=document.getElementById('email').value,password=document.getElementById('password').value;const body=signup?{name:document.getElementById('name').value,email,password}:{email,password};const d=await api(signup?'/api/auth/register':'/api/auth/login',{method:'POST',body:JSON.stringify(body)});token=d.token;localStorage.setItem('SOTSBA_TOKEN',token);enter();}catch(e){showToast(e.message)}}
+async function enter(){document.getElementById('auth').classList.add('hidden');document.getElementById('app').classList.remove('hidden');await refresh()}
+function logout(){token=null;localStorage.removeItem('SOTSBA_TOKEN');location.reload()}
+async function refresh(){try{const me=await api('/api/me');document.getElementById('credits').textContent=me.credits;document.getElementById('plan').textContent=me.plan;document.getElementById('status').textContent='● API conectada';document.getElementById('status').style.color='var(--ok)';const g=await api('/api/generations');document.getElementById('genCount').textContent=g.length;document.getElementById('contentCount').textContent=g.filter(x=>x.type==='content').length;document.getElementById('designCount').textContent=g.filter(x=>x.type==='design').length;document.getElementById('anCredits').textContent=me.credits}catch(e){logout()}}
+function go(page){document.querySelectorAll('.page').forEach(x=>x.classList.add('hidden'));document.getElementById(page).classList.remove('hidden');document.querySelectorAll('.nav button').forEach(x=>x.classList.toggle('active',x.dataset.page===page));document.getElementById('title').textContent=titles[page]}
+document.querySelectorAll('.nav button').forEach(b=>b.onclick=()=>go(b.dataset.page));
+async function generateContent(){try{const d=await api('/api/content/generate',{method:'POST',body:JSON.stringify({briefing:document.getElementById('contentBrief').value,type:document.getElementById('contentType').value,tone:document.getElementById('tone').value})});document.getElementById('contentResult').innerHTML='<div style="text-align:left;max-width:680px"><strong>Conteúdo gerado</strong><pre style="white-space:pre-wrap;color:#dfe2ec;font:inherit">'+esc(d.result)+'</pre></div>';await refresh()}catch(e){showToast(e.message)}}
+async function generateDesign(){try{const d=await api('/api/design/generate',{method:'POST',body:JSON.stringify({briefing:document.getElementById('designBrief').value,format:document.getElementById('format').value,style:document.getElementById('style').value})});if(d.result?.startsWith('data:image'))document.getElementById('designResult').innerHTML='<img src="'+d.result+'" style="max-width:100%;max-height:600px;border-radius:14px"><div class="actions"><a class="btn" download="sotsba-arte.png" href="'+d.result+'">Baixar PNG</a></div>';else document.getElementById('designResult').innerHTML='<div><strong>Modo demonstração</strong><p class="muted">'+esc(d.result||d.message)+'</p></div>';await refresh()}catch(e){showToast(e.message)}}
+async function generateSEO(){try{const d=await api('/api/content/generate',{method:'POST',body:JSON.stringify({briefing:'SEO para palavra-chave '+document.getElementById('seoKey').value+'. '+document.getElementById('seoBrief').value,type:'SEO',tone:'técnico e otimizado'})});document.getElementById('seoResult').innerHTML='<div style="text-align:left"><strong>SEO gerado</strong><pre style="white-space:pre-wrap;font:inherit">'+esc(d.result)+'</pre></div>';await refresh()}catch(e){showToast(e.message)}}
+async function subscribe(plan){try{showToast('Abrindo checkout seguro...');const d=await api('/api/billing/checkout',{method:'POST',body:JSON.stringify({plan})});if(d.url) location.href=d.url;else showToast('Checkout indisponível');}catch(e){showToast(e.message)}}
+async function openPortal(){try{const d=await api('/api/billing/portal',{method:'POST'});if(d.url) location.href=d.url;else showToast('Portal indisponível');}catch(e){showToast(e.message)}}
+function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
+const billing=new URLSearchParams(location.search).get('billing');if(billing==='success') showToast('Pagamento iniciado. Seu plano será ativado após a confirmação do Stripe.');if(billing==='cancelled') showToast('Checkout cancelado.');if(token) enter();
+</script>
+</body></html>
