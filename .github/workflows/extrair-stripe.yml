@@ -1,0 +1,32 @@
+name: Extract SOTSBA Stripe Package
+
+on:
+  push:
+    branches:
+      - stripe-interacao
+
+permissions:
+  contents: write
+
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Extract Stripe package
+        run: |
+          unzip -o SOTSBA_STRIPE_ASSINATURAS_V1.zip -d .
+          rm -f SOTSBA_STRIPE_ASSINATURAS_V1.zip
+
+      - name: Commit extracted files
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .
+          git diff --cached --quiet || git commit -m "Extract SOTSBA Stripe integration"
+          git push
