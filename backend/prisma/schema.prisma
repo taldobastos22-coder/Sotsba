@@ -8,28 +8,32 @@ datasource db {
 }
 
 model User {
-  id           String       @id @default(cuid())
-  name         String
-  email        String       @unique
-  passwordHash String
-  credits      Int          @default(20)
-  plan         String       @default("free")
-  createdAt    DateTime     @default(now())
+  id                   String       @id @default(cuid())
+  name                 String
+  email                String       @unique
+  passwordHash         String
+  credits              Int          @default(20)
+  plan                 String       @default("free")
+  stripeCustomerId     String?      @unique
+  stripeSubscriptionId String?      @unique
+  subscriptionStatus   String?
+  currentPeriodEnd     DateTime?
+  createdAt            DateTime     @default(now())
 
-  company      Company?
-  generations  Generation[]
+  company     Company?
+  generations Generation[]
 }
 
 model Company {
-  id         String @id @default(cuid())
-  userId     String @unique
+  id         String  @id @default(cuid())
+  userId     String  @unique
   name       String
   segment    String?
   website    String?
   brandColor String?
   logoUrl    String?
 
-  user       User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Generation {
